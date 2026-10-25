@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chinese Name Generator | BaZi &amp; Five Elements Cultural Tool</title>
+<meta name="description" content="Generate elegant, easy-to-pronounce Chinese names inspired by your own name and ancient Chinese BaZi and Five Elements culture. All calculations run locally. No data collected." />
+
+<!-- OG for X / Twitter -->
+<meta property="og:title" content="Chinese Name Generator | BaZi & Five Elements Cultural Tool">
+<meta property="og:description" content="Get a Chinese name that echoes your own name, inspired by BaZi & Five Elements culture. Local, private, free.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f6f2ea'/%3E%3Ctext x='32' y='44' font-size='34' font-family='serif' text-anchor='middle' fill='%23a33b2e'%3E名%3C/text%3E%3C/svg%3E">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chinese Name Generator | BaZi & Five Elements Cultural Tool">
+<meta name="twitter:description" content="Get a Chinese name that echoes your own name, inspired by BaZi & Five Elements culture. Local, private, free.">
+
+<style>
+:root{
+  --paper:#f6f2ea;
+  --card:#fdfbf6;
+  --ink:#2b2925;
+  --ink-soft:#6b665d;
+  --seal:#a33b2e;
+  --line:#e3dccd;
+  --wood:#4a7c59;
+  --fire:#c4552e;
+  --earth:#9a6b3f;
+  --metal:#8d8d93;
+  --water:#3e6f8e;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Segoe UI","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
+  line-height:1.6;
+}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px 60px}
+
+/* header */
+header{text-align:center;padding:48px 16px 8px}
+.logo{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-weight:600;color:var(--seal);font-size:15px;letter-spacing:.35em;text-transform:uppercase}
+h1{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:clamp(30px,6vw,44px);margin:14px 0 10px;font-weight:600;letter-spacing:.02em}
+.sub{color:var(--ink-soft);max-width:560px;margin:0 auto;font-size:16px}
+.tag{display:inline-block;margin-top:14px;padding:5px 14px;border:1px solid var(--seal);color:var(--seal);border-radius:999px;font-size:13px}
+
+/* form */
+.form{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 22px;margin:34px 0 8px;box-shadow:0 8px 30px rgba(43,41,37,.05)}
+label{display:block;font-size:13px;font-weight:600;margin:0 0 6px;color:var(--ink)}
+.field{margin-bottom:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+input,select{
+  width:100%;padding:12px 13px;font-size:16px;border:1px solid var(--line);
+  border-radius:10px;background:#fff;color:var(--ink);outline:none;
+}
+input:focus,select:focus{border-color:var(--seal);box-shadow:0 0 0 3px rgba(163,59,46,.12)}
+.hint{font-size:12px;color:var(--ink-soft);margin-top:5px}
+.btn{
+  width:100%;padding:15px;font-size:17px;font-weight:600;color:#fff;
+  background:var(--seal);border:none;border-radius:11px;cursor:pointer;
+  transition:transform .05s,background .2s;
+}
+.btn:hover{background:#8c2f24}
+.btn:active{transform:translateY(1px)}
+.tone-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.tone-chip{padding:7px 12px;border:1px solid var(--line);border-radius:999px;font-size:13px;cursor:pointer;background:#fff;color:var(--ink-soft)}
+.tone-chip.on{border-color:var(--seal);color:var(--seal);background:#fff4f1;font-weight:600}
+
+/* results */
+#resultArea{display:none;margin-top:36px}
+.res-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.res-head h2{margin:0;font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:24px}
+.res-head .from{color:var(--ink-soft);font-size:15px}
+.surname-strip{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:22px}
+.surname-strip .lbl{font-size:13px;color:var(--ink-soft);margin-bottom:8px}
+.surname-strip .lbl strong{color:var(--ink)}
+.surname-options{display:flex;gap:8px;flex-wrap:wrap}
+.surname-opt{padding:8px 14px;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:#fff;font-size:15px}
+.surname-opt.on{border-color:var(--seal);color:var(--seal);background:#fff4f1}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 22px;margin-bottom:20px;box-shadow:0 6px 22px rgba(43,41,37,.04)}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.han{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:44px;font-weight:600;letter-spacing:.06em}
+.pinyin{font-size:20px;color:var(--seal);margin-top:2px;font-weight:600}
+.listen{
+  display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border:1px solid var(--line);
+  border-radius:10px;background:#fff;color:var(--ink);cursor:pointer;font-size:14px;
+}
+.listen:hover{border-color:var(--seal);color:var(--seal)}
+.listen svg{width:16px;height:16px;fill:currentColor}
+.chars{margin:16px 0 6px;border-top:1px dashed var(--line);padding-top:14px}
+.char{display:grid;grid-template-columns:46px 1fr auto;gap:12px;align-items:start;padding:7px 0}
+.char-c{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;font-size:28px;font-weight:600;text-align:center}
+.char-b{font-size:14px}
+.char-b .py{color:var(--ink-soft);font-size:13px}
+.char-e{font-size:14px}
+.el{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;color:#fff;font-weight:600;margin-left:6px}
+.el.Wood{background:var(--wood)}.el.Fire{background:var(--fire)}.el.Earth{background:var(--earth)}.el.Metal{background:var(--metal)}.el.Water{background:var(--water)}
+.overall{margin-top:10px;font-size:15px}
+.origin{margin-top:10px;font-size:13px;color:var(--ink-soft);border-left:3px solid var(--line);padding-left:12px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.meta span{font-size:12px;padding:4px 10px;border-radius:999px;background:#efe9dc;color:var(--ink-soft)}
+.badge{font-size:12px;padding:4px 10px;border-radius:999px;background:#fff4f1;color:var(--seal)}
+
+.profile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:8px}
+.profile h3{margin:0 0 12px;font-size:16px}
+.profile-bars{display:flex;flex-direction:column;gap:10px}
+.pbar{display:flex;align-items:center;gap:12px;font-size:14px}
+.pbar .nm{width:64px;color:var(--ink-soft)}
+.pbar .track{flex:1;height:12px;background:#efe9dc;border-radius:999px;overflow:hidden}
+.pbar .fill{height:100%;border-radius:999px}
+.pbar .cnt{width:30px;text-align:right;font-weight:600}
+
+footer{margin-top:48px;border-top:1px solid var(--line);padding-top:24px;font-size:13px;color:var(--ink-soft)}
+footer h4{margin:14px 0 4px;font-size:14px;color:var(--ink)}
+footer p{margin:4px 0}
+
+.share{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;align-items:center;font-size:13px;color:var(--ink-soft)}
+.share a{color:var(--seal);text-decoration:none}
+
+@media(max-width:500px){
+  .grid2{grid-template-columns:1fr}
+  .char{grid-template-columns:40px 1fr}
+  .char-e{grid-column:2}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">五 行 · BaZi</div>
+    <h1>Chinese Name Generator</h1>
+    <p class="sub">A name that echoes your own — inspired by ancient Chinese BaZi and Five Elements culture. For cultural fun &amp; learning only, <strong>not fortune-telling</strong>.</p>
+    <span class="tag">Privacy-first · runs in your browser · free</span>
+  </header>
+
+  <section class="form">
+    <div class="field">
+      <label for="origName">Your Name (Optional, phonetic match)</label>
+      <input id="origName" type="text" placeholder="e.g. Emma, Lucas, Sofia" />
+      <p class="hint">We'll pick a Chinese surname that sounds like yours.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label for="gender">Gender Preference</label>
+        <select id="gender">
+          <option value="female">Female</option>
+          <option value="male">Male</option>
+          <option value="neutral">Neutral / Unisex</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="style">Style Preference</label>
+        <select id="style">
+          <option value="elegant">Elegant &amp; Poetic</option>
+          <option value="bright">Bright &amp; Positive</option>
+          <option value="nature">Nature / Landscape</option>
+          <option value="simple">Simple &amp; Easy</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label for="year">Birth Year</label>
+        <input id="year" type="number" min="1900" max="2026" value="1995" />
+      </div>
+      <div class="field">
+        <label for="month">Birth Month</label>
+        <select id="month">
+          <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+          <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+          <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+          <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label for="day">Birth Day</label>
+        <input id="day" type="number" min="1" max="31" value="15" />
+      </div>
+      <div class="field">
+        <label for="hour">Hour (0–23)</label>
+        <input id="hour" type="number" min="0" max="23" value="10" />
+      </div>
+    </div>
+
+    <button id="genBtn" class="btn">Generate Names</button>
+  </section>
+
+  <section id="resultArea">
+    <div class="res-head">
+      <h2>Your Chinese Names</h2>
+      <span class="from" id="fromLine"></span>
+    </div>
+
+    <!-- surname strip, filled by JS -->
+    <div class="surname-strip" id="surnameStrip" style="display:none">
+      <div class="lbl"><strong>Surname match:</strong> based on your name</div>
+      <div class="surname-options" id="surnameOptions"></div>
+    </div>
+
+    <div id="cards"></div>
+
+    <div class="profile">
+      <h3>Elemental Imagery (cultural reference, not a reading)</h3>
+      <div class="profile-bars" id="profileBars"></div>
+    </div>
+  </section>
+
+  <footer>
+    <h4>Privacy Note</h4>
+    <p>Everything is calculated locally inside your browser. We do not collect, send or store your name, birth time or any personal data.</p>
+    <h4>Disclaimer</h4>
+    <p>This is a cultural entertainment &amp; Chinese-learning tool. BaZi and Five Elements are ancient Chinese philosophical traditions, NOT fortune-telling. Generated names have no legal status and cannot guarantee luck or life outcomes. They are not official identity names.</p>
+    <div class="share">
+      <span>Share:</span>
+      <a id="shareX" href="https://twitter.com/intent/tweet?text=Found%20my%20Chinese%20name%20—%20what%27s%20yours%3F" target="_blank" rel="noopener">Post on X</a>
+      <span>·</span>
+      <a id="copyLink" href="#">Copy link</a>
+      <span>·</span>
+      <span>#ChineseCulture #ChineseName #BaZi #FiveElements</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* ===== Name pools ===== */
+const SURNAMES = [
+  {s:"林",py:"Lín",el:"Wood",keys:["L","Lin"]},
+  {s:"苏",py:"Sū",el:"Wood",keys:["S","So","Su"]},
+  {s:"沈",py:"Shěn",el:"Water",keys:["S","Sha","Sh"]},
+  {s:"何",py:"Hé",el:"Wood",keys:["H","Ha"]},
+  {s:"陈",py:"Chén",el:"Fire",keys:["C","Ch","Che"]},
+  {s:"金",py:"Jīn",el:"Metal",keys:["J","K","G","Kim"]},
+  {s:"唐",py:"Táng",el:"Earth",keys:["T","Ta","Don"]},
+  {s:"陆",py:"Lù",el:"Fire",keys:["Lu","Lou"]},
+  {s:"温",py:"Wēn",el:"Earth",keys:["W","V","Win"]},
+  {s:"白",py:"Bái",el:"Metal",keys:["B","Ba"]},
+  {s:"江",py:"Jiāng",el:"Water",keys:["J","Gia"]},
+  {s:"安",py:"Ān",el:"Earth",keys:["A","Ann","Ana"]},
+  {s:"顾",py:"Gù",el:"Wood",keys:["G","Gu"]},
+  {s:"孟",py:"Mèng",el:"Earth",keys:["M","Mo","Ma"]},
+  {s:"谢",py:"Xiè",el:"Metal",keys:["X","S","Sh"]},
+  {s:"陶",py:"Táo",el:"Fire",keys:["T","To"]},
+  {s:"夏",py:"Xià",el:"Fire",keys:["X","Sha"]},
+  {s:"倪",py:"Ní",el:"Wood",keys:["N","Ni"]},
+  {s:"周",py:"Zhōu",el:"Earth",keys:["Z","Jo"]},
+  {s:"卫",py:"Wèi",el:"Earth",keys:["V","We"]}
+];
+
+const GIVEN = {
+  female: [
+    {han:"沐溪",py:"Mù Xī",chars:[{c:"沐",py:"mù",meaning:"to bathe, to be cleansed and nourished by nature",el:"Water"},{c:"溪",py:"xī",meaning:"a clear mountain stream; quiet, unhurried",el:"Water"}],overall:"A gentle forest stream that cleanses and quietly nourishes everything it touches — soft strength, clarity, and calm.",origin:"Inspired by the image of nature's gentle flow found throughout classical landscape poetry.",styles:["nature","elegant"]},
+    {han:"若曦",py:"Ruò Xī",chars:[{c:"若",py:"ruò",meaning:"as if, like; graceful and composed",el:"Wood"},{c:"曦",py:"xī",meaning:"morning sunlight; dawn glow",el:"Fire"}],overall:"Like the first rays of morning light — gentle, hopeful, and quietly radiant.",origin:"Common in elegant modern naming; evokes the warmth of sunrise.",styles:["elegant","bright"]},
+    {han:"芷晴",py:"Zhǐ Qíng",chars:[{c:"芷",py:"zhǐ",meaning:"a fragrant white angelica herb; purity and virtue",el:"Wood"},{c:"晴",py:"qíng",meaning:"clear, sunny sky; openness",el:"Fire"}],overall:"A fragrant herb under a clear sky — pure, fresh, bright and uncomplicated.",origin:"'Zhi' is prized in classical poetry as a symbol of virtue.",styles:["bright","simple"]},
+    {han:"安澜",py:"Ān Lán",chars:[{c:"安",py:"ān",meaning:"peace, safety, tranquility",el:"Earth"},{c:"澜",py:"lán",meaning:"ripples on water; gentle waves",el:"Water"}],overall:"Calm waters — peaceful inside, yet alive with gentle movement. Serenity and grace.",origin:"'An' is among the most beloved characters for its sense of safety and ease.",styles:["elegant","simple"]},
+    {han:"悦宁",py:"Yuè Níng",chars:[{c:"悦",py:"yuè",meaning:"joy, delight, gladness",el:"Fire"},{c:"宁",py:"níng",meaning:"serene, tranquil, peaceful",el:"Earth"}],overall:"Joy that settles into stillness — a bright heart that brings calm to others.",origin:"A modern pairing blending happiness ('yue') with calm ('ning').",styles:["bright","simple"]},
+    {han:"月婵",py:"Yuè Chán",chars:[{c:"月",py:"yuè",meaning:"the moon; luminous and serene",el:"Metal"},{c:"婵",py:"chán",meaning:"beautiful, graceful (as of the moon goddess)",el:"Metal"}],overall:"The radiant moon — luminous, graceful, and quietly beautiful from afar.",origin:"'Chang'e' is the moon goddess of Chinese myth; the moon is a timeless symbol of elegance.",styles:["elegant","nature"]}
+  ],
+  male: [
+    {han:"景行",py:"Jǐng Xíng",chars:[{c:"景",py:"jǐng",meaning:"scenery, brightness; admired",el:"Fire"},{c:"行",py:"xíng",meaning:"to walk, to carry out, conduct",el:"Fire"}],overall:"To walk a bright and upright path — noble conduct and ambition.",origin:"From the Shijing (Book of Songs): 'The high mountain is looked up to; the great road is walked upon.'",styles:["elegant","bright"]},
+    {han:"承泽",py:"Chéng Zé",chars:[{c:"承",py:"chéng",meaning:"to carry, to bear, to inherit",el:"Earth"},{c:"泽",py:"zé",meaning:"grace, favor; marshland, moistened earth",el:"Water"}],overall:"To carry grace and benefit others — grounded, generous, and responsible.",origin:"'Zhe' appears in classic texts meaning blessing and nurture from nature.",styles:["bright","simple"]},
+    {han:"浩然",py:"Hào Rán",chars:[{c:"浩",py:"hào",meaning:"vast, immense (as the sea)",el:"Water"},{c:"然",py:"rán",meaning:"so, thus; natural and unforced",el:"Fire"}],overall:"A vast, upright spirit that comes naturally — generous, strong and unpretentious.",origin:"From Mencius: the 'great, noble spirit' (haoran zhi qi) of a moral person.",styles:["bright","simple"]},
+    {han:"亦轩",py:"Yì Xuān",chars:[{c:"亦",py:"yì",meaning:"also, likewise; refined",el:"Wood"},{c:"轩",py:"xuān",meaning:"a lofty pavilion; grand, elegant bearing",el:"Wood"}],overall:"Elegant and composed with a grand, upright presence — refinement that stands tall.",origin:"'Xuan' often describes a stately carriage or high hall in classical writing.",styles:["elegant","nature"]},
+    {han:"骏驰",py:"Jùn Chí",chars:[{c:"骏",py:"jùn",meaning:"a fine horse; excellent, swift",el:"Fire"},{c:"驰",py:"chí",meaning:"to gallop, to run fast",el:"Fire"}],overall:"A swift, excellent steed charging forward — energetic, ambitious, unstoppable.",origin:"Classical imagery of the galloping horse symbolizing vigor and progress.",styles:["bright","simple"]},
+    {han:"子墨",py:"Zǐ Mò",chars:[{c:"子",py:"zǐ",meaning:"master, scholar; you (respectful)",el:"Water"},{c:"墨",py:"mò",meaning:"ink; learning and literary depth",el:"Earth"}],overall:"A learned scholar steeped in ink and wisdom — thoughtful, cultured, and calm.",origin:"References the ink of calligraphy and the honored figure of the classical scholar.",styles:["elegant","simple"]}
+  ],
+  neutral: [
+    {han:"知远",py:"Zhī Yuǎn",chars:[{c:"知",py:"zhī",meaning:"to know, wisdom, understanding",el:"Fire"},{c:"远",py:"yuǎn",meaning:"far, distant; far-reaching vision",el:"Earth"}],overall:"Wisdom that sees far — thoughtful, broad-minded, and farsighted.",origin:"From the Confucian classic: 'knowing is not as good as loving; loving not as good as rejoicing.'",styles:["elegant"]},
+    {han:"云舒",py:"Yún Shū",chars:[{c:"云",py:"yún",meaning:"clouds; free and unbounded",el:"Metal"},{c:"舒",py:"shū",meaning:"to unfold, relaxed, at ease",el:"Wood"}],overall:"Clouds that unfold freely across the sky — easygoing, open, and unhurried.",origin:"Evokes the idiom 'clouds roll and unfurl' — a life of ease and freedom.",styles:["nature","elegant"]},
+    {han:"思齐",py:"Sī Qí",chars:[{c:"思",py:"sī",meaning:"to think, to reflect",el:"Fire"},{c:"齐",py:"qí",meaning:"equal, to match, aligned",el:"Wood"}],overall:"To reflect and strive to match the best — humble ambition and self-improvement.",origin:"From the Analects of Confucius: 'When you see the worthy, think of becoming equal to them.'",styles:["elegant"]},
+    {han:"清和",py:"Qīng Hé",chars:[{c:"清",py:"qīng",meaning:"clear, pure, lucid",el:"Water"},{c:"和",py:"hé",meaning:"harmony, peace, gentleness",el:"Fire"}],overall:"Clear and harmonious — a pure heart that brings people together peacefully.",origin:"A classical ideal of clarity and harmony prized in Chinese aesthetics.",styles:["elegant","bright"]},
+    {han:"嘉木",py:"Jiā Mù",chars:[{c:"嘉",py:"jiā",meaning:"excellent, praiseworthy, auspicious",el:"Wood"},{c:"木",py:"mù",meaning:"tree, wood; growth",el:"Wood"}],overall:"An excellent, flourishing tree — thriving, grounded, and full of life.",origin:"From the 'Book of Songs': 'A fine tree in the south, admired and appreciated.'",styles:["nature","simple"]},
+    {han:"立秋",py:"Lì Qiū",chars:[{c:"立",py:"lì",meaning:"to stand, to establish",el:"Earth"},{c:"秋",py:"qiū",meaning:"autumn; harvest and maturity",el:"Metal"}],overall:"The start of autumn — a season of harvest, maturity, and quiet abundance.",origin:"Named after one of the 24 solar terms; evokes balance and fulfillment.",styles:["nature","simple"]}
+  ]
+};
+
+/* ===== Helpers ===== */
+const toneMark = {"ā":"a1","á":"a2","ǎ":"a3","à":"a4","ē":"e1","é":"e2","ě":"e3","è":"e4","ī":"i1","í":"i2","ǐ":"i3","ì":"i4","ō":"o1","ó":"o2","ǒ":"o3","ò":"o4","ū":"u1","ú":"u2","ǔ":"u3","ù":"u4","ǖ":"ü1","ǘ":"ü2","ǚ":"ü3","ǜ":"ü4"};
+
+function matchSurnames(origName){
+  if(!origName) return [];
+  const first = origName.trim().replace(/[^A-Za-z]/g,"")[0] || "";
+  const upper = first.toUpperCase();
+  const start = origName.trim().slice(0,1).toUpperCase() + (origName.trim()[1]||"").toLowerCase();
+  const hits = SURNAMES.filter(s=> s.keys.some(k=> k.toUpperCase()===upper || (start.length>1 && k===start)));
+  if(hits.length) return hits;
+  const letterHits = SURNAMES.filter(s=> s.keys.includes(upper));
+  return letterHits;
+}
+
+/* Mock elemental profile from date+hour — cultural reference only */
+function elementProfile(y,m,d,h){
+  const total = y + m + d + h;
+  const weights = {Wood:0,Fire:0,Earth:0,Metal:0,Water:0};
+  const order = ["Wood","Fire","Earth","Metal","Water"];
+  let v = total;
+  for(let i=0;i<5;i++){ weights[order[i]] = 2 + (v % 3); v = Math.floor(v/3); }
+  // adjust primary by hour pillar feel
+  const hourEl = order[(Math.floor(h/2)+m) % 5];
+  weights[hourEl] += 1;
+  return weights;
+}
+
+function poolFor(gender,style){
+  let pool = GIVEN[gender].slice();
+  const styled = pool.filter(g=> g.styles.includes(style));
+  return styled.length>=2 ? styled : pool;
+}
+
+/* ===== State ===== */
+let state = {selected:[], surname:null};
+
+/* ===== Render ===== */
+function renderCards(names, surname, origName){
+  const fromLine = document.getElementById('fromLine');
+  fromLine.textContent = origName ? `echoing “${origName}”` : "";
+
+  const strip = document.getElementById('surnameStrip');
+  const opts = document.getElementById('surnameOptions');
+  if(names && names.length>1){
+    strip.style.display = 'block';
+    opts.innerHTML = "";
+    names.forEach((s,i)=>{
+      const el = document.createElement('div');
+      el.className = 'surname-opt' + (i===state.surnameIndex ? ' on' : '');
+      el.innerHTML = `<span class="han" style="font-family:'Noto Serif SC','Songti SC','STSong','SimSun',serif">${s.s}</span> ${s.py} <span class="el ${s.el}" style="margin-left:4px">${s.el}</span>`;
+      el.onclick = ()=>{
+        state.surnameIndex = i;
+        state.surname = s;
+        const oldName = state.given;
+        state.given = oldName;
+        renderAll();
+      };
+      opts.appendChild(el);
+    });
+  } else {
+    strip.style.display = 'none';
+  }
+}
+
+function renderAll(){
+  const gender = document.getElementById('gender').value;
+  const style = document.getElementById('style').value;
+  const origName = document.getElementById('origName').value;
+
+  const surnames = state.surname ? [state.surname] : matchSurnames(origName);
+  const useSurnames = surnames.length ? surnames : SURNAMES.slice(0,3);
+  if(surnames.length>0) state.surnameIndex = 0;
+
+  const pool = poolFor(gender,style).slice();
+  // shuffle
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  const picked = pool.slice(0,3);
+
+  // assign surnames: prefer matched ones
+  const cardsEl = document.getElementById('cards');
+  cardsEl.innerHTML = "";
+  picked.forEach((g,i)=>{
+    const s = (state.surname) ? state.surname : useSurnames[i % useSurnames.length];
+    const han = s.s + g.han;
+    const py = s.py + " " + g.py;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const charHTML = g.chars.map(c=>`
+      <div class="char">
+        <div class="char-c">${c.c}</div>
+        <div class="char-b"><div class="py">${c.py} <span class="el ${c.el}">${c.el}</span></div><div>${c.meaning}</div></div>
+      </div>`).join("");
+
+    card.innerHTML = `
+      <div class="card-top">
+        <div>
+          <div class="han">${han}</div>
+          <div class="pinyin">${py}</div>
+        </div>
+        <button class="listen" data-text="${han}" aria-label="Listen to pronunciation">
+          <svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>
+          Listen
+        </button>
+      </div>
+      <div class="chars">${charHTML}</div>
+      <p class="overall">${g.overall}</p>
+      <p class="origin">${g.origin}</p>
+      <div class="meta">
+        <span class="badge">${s.s} ${s.py} · ${s.el}</span>
+        <span>${g.py}</span>
+      </div>
+    `;
+    cardsEl.appendChild(card);
+  });
+
+  // surname strip
+  renderCards(useSurnames, state.surname, origName);
+
+  // profile
+  const y=+document.getElementById('year').value,m=+document.getElementById('month').value,d=+document.getElementById('day').value,h=+document.getElementById('hour').value;
+  const w = elementProfile(y,m,d,h);
+  const colorMap={Wood:'var(--wood)',Fire:'var(--fire)',Earth:'var(--earth)',Metal:'var(--metal)',Water:'var(--water)'};
+  const max = Math.max(...Object.values(w));
+  const bars = document.getElementById('profileBars');
+  bars.innerHTML = "";
+  ["Wood","Fire","Earth","Metal","Water"].forEach(el=>{
+    const pct = Math.round(w[el]/max*100);
+    const row = document.createElement('div');
+    row.className = 'pbar';
+    row.innerHTML = `<div class="nm">${el}</div><div class="track"><div class="fill" style="width:${pct}%;background:${colorMap[el]}"></div></div><div class="cnt">${w[el]}</div>`;
+    bars.appendChild(row);
+  });
+
+  document.getElementById('resultArea').style.display='block';
+  document.getElementById('resultArea').scrollIntoView();
+
+  // share link
+  const url = encodeURIComponent(location.href);
+  const text = encodeURIComponent("Found my Chinese name — what's yours? Try this free, privacy-first Chinese Name Generator ✨ #ChineseName #ChineseCulture");
+  document.getElementById('shareX').href = "https://twitter.com/intent/tweet?text="+text+"&url="+url;
+}
+
+/* ===== Events ===== */
+document.getElementById('genBtn').addEventListener('click', ()=>{
+  const orig = document.getElementById('origName').value;
+  const matched = matchSurnames(orig);
+  state.surname = null;
+  state.surnameIndex = 0;
+  state.given = null;
+  renderAll();
+});
+
+document.getElementById('copyLink').addEventListener('click', (e)=>{
+  e.preventDefault();
+  try{
+    navigator.clipboard.writeText(location.href);
+    alert("Link copied!");
+  }catch(_){
+    alert("Your link: " + location.href);
+  }
+});
+
+document.addEventListener('click', (e)=>{
+  const b = e.target.closest('.listen');
+  if(b && 'speechSynthesis' in window){
+    const u = new SpeechSynthesisUtterance(b.dataset.text);
+    u.lang = 'zh-CN';
+    speechSynthesis.speak(u);
+  }
+});
+
+/* live surname preview as user types */
+document.getElementById('origName').addEventListener('input', function(){
+  const hit = matchSurnames(this.value);
+  const strip = document.getElementById('surnameStrip');
+  if(hit.length){
+    strip.style.display='block';
+    const opts=document.getElementById('surnameOptions');
+    opts.innerHTML="";
+    hit.forEach((s)=>{
+      const el=document.createElement('div');
+      el.className='surname-opt';
+      el.innerHTML=`<span style="font-family:'Noto Serif SC','Songti SC','STSong','SimSun',serif">${s.s}</span> ${s.py}`;
+      opts.appendChild(el);
+    });
+  } else {
+    strip.style.display='none';
+  }
+});
+</script>
+</body>
+</html>
